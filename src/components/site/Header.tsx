@@ -20,8 +20,6 @@ export function Header() {
             className="block h-9 w-9 bg-contain bg-center bg-no-repeat"
             style={{ backgroundImage: "url(/TEAM_BHADRAKALI_Logo.png)" }}
           />
-            />
-          )}
           <span className="font-display text-sm tracking-[0.2em]">
             TEAM <span className="text-primary">BHADRAKALI</span>
           </span>
