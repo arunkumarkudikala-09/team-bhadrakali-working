@@ -40,7 +40,7 @@ function ApplyPage() {
 
   return (
     <section className="px-6 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-6xl">
         <Float><Eyebrow>Lead Capture Terminal</Eyebrow></Float>
         <Float delay={0.1}><h1 className="max-w-4xl text-5xl font-extrabold sm:text-7xl">Apply For A <span className="text-gradient">Partnership.</span></h1></Float>
 
