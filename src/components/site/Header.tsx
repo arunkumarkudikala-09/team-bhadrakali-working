@@ -11,17 +11,15 @@ const links = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
-  const [logoOk, setLogoOk] = useState(true);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/60 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          {logoOk && (
-            <img
-              src="/TEAM_BHADRAKALI_Logo.png"
-              alt="Team Bhadrakali logo"
-              className="h-9 w-auto"
-              onError={() => setLogoOk(false)}
+          <span
+            aria-hidden
+            className="block h-9 w-9 bg-contain bg-center bg-no-repeat"
+            style={{ backgroundImage: "url(/TEAM_BHADRAKALI_Logo.png)" }}
+          />
             />
           )}
           <span className="font-display text-sm tracking-[0.2em]">
