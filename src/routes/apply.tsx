@@ -21,7 +21,7 @@ export const Route = createFileRoute("/apply")({
   component: ApplyPage,
 });
 
-const field = "h-12 rounded-none border-0 border-b border-input bg-transparent px-0 text-base shadow-none focus-visible:ring-0 focus-visible:border-primary";
+const field = "h-12 rounded-xl bg-card/80 text-base";
 
 function ApplyPage() {
   const [budget, setBudget] = useState("");
@@ -42,26 +42,26 @@ function ApplyPage() {
     <section className="px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl">
         <Float><Eyebrow>Lead Capture Terminal</Eyebrow></Float>
-        <Float delay={0.1}><h1 className="max-w-4xl text-5xl leading-none sm:text-7xl">Apply For A <span className="text-primary">Partnership.</span></h1></Float>
+        <Float delay={0.1}><h1 className="max-w-4xl text-5xl font-extrabold sm:text-7xl">Apply For A <span className="text-gradient">Partnership.</span></h1></Float>
 
-        <div className="mt-20 grid gap-16 lg:grid-cols-2">
+        <div className="mt-14 grid gap-8 lg:grid-cols-2">
           <Float delay={0.2}>
-            <form onSubmit={onSubmit} className="space-y-10">
+            <form onSubmit={onSubmit} className="glass space-y-6 rounded-3xl p-8 sm:p-10">
               {[
                 { id: "name", l: "Name", t: "text" },
                 { id: "company", l: "Company", t: "text" },
                 { id: "website", l: "Website", t: "url", p: "https://" },
               ].map((f) => (
                 <div key={f.id} className="space-y-2">
-                  <Label htmlFor={f.id} className="text-xs font-bold uppercase tracking-[0.25em]">{f.l}</Label>
+                  <Label htmlFor={f.id} className="text-sm font-semibold text-maroon">{f.l}</Label>
                   <Input id={f.id} name={f.id} type={f.t} placeholder={f.p} required maxLength={200} className={field} />
                 </div>
               ))}
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-[0.25em]">Monthly Marketing Budget</Label>
+                <Label className="text-sm font-semibold text-maroon">Monthly Marketing Budget</Label>
                 <Select value={budget} onValueChange={setBudget}>
                   <SelectTrigger className={field}><SelectValue placeholder="Select a range" /></SelectTrigger>
-                  <SelectContent className="rounded-none">
+                  <SelectContent className="rounded-xl">
                     <SelectItem value="lt1k">&lt;$1k</SelectItem>
                     <SelectItem value="1k-5k">$1k–$5k</SelectItem>
                     <SelectItem value="5k+">$5k+</SelectItem>
@@ -69,8 +69,8 @@ function ApplyPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="bottleneck" className="text-xs font-bold uppercase tracking-[0.25em]">Biggest Bottleneck</Label>
-                <Textarea id="bottleneck" name="bottleneck" required maxLength={1000} rows={4} placeholder="Leads, conversions, visibility…" className="rounded-none border-0 border-b border-input bg-transparent px-0 text-base shadow-none focus-visible:ring-0 focus-visible:border-primary" />
+                <Label htmlFor="goal" className="text-sm font-semibold text-maroon">Main Goal</Label>
+                <Textarea id="goal" name="goal" required maxLength={1000} rows={4} placeholder="More qualified leads, higher ROAS, global expansion…" className="rounded-xl bg-card/80 text-base" />
               </div>
               <Button type="submit" variant="shakti" size="xl" className="w-full sm:w-auto">Submit Application</Button>
               {sent && <p className="text-sm text-muted-foreground">Thank you — your application is in our queue.</p>}
@@ -78,9 +78,9 @@ function ApplyPage() {
           </Float>
 
           <Float delay={0.3}>
-            <div className="flex min-h-[560px] flex-col items-center justify-center gap-6 border border-dashed border-maroon bg-card p-10 text-center">
+            <div className="flex min-h-[560px] flex-col items-center justify-center gap-6 rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-blush/60 via-card/60 to-peach/60 p-10 backdrop-blur-xl text-center">
               <CalendarDays className="size-14 text-primary" strokeWidth={1.25} />
-              <p className="font-display text-2xl">Calendar Booking Integration (Calendly)</p>
+              <p className="font-display text-2xl font-bold text-maroon">Calendar Booking Integration (Calendly)</p>
               <p className="max-w-xs text-sm text-muted-foreground">Your strategy-call scheduler will appear here.</p>
             </div>
           </Float>
