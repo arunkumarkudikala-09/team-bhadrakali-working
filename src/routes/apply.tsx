@@ -29,7 +29,10 @@ function ApplyPage() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!budget) return toast.error("Please select your monthly marketing budget.");
+    if (!budget) {
+      toast.error("Please select your monthly marketing budget.");
+      return;
+    }
     setSent(true);
     toast.success("Application received. We'll be in touch within 48 hours.");
     e.currentTarget.reset();
