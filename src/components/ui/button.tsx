@@ -17,7 +17,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         shakti:
-          "bg-primary text-primary-foreground uppercase tracking-[0.18em] font-bold hover:bg-maroon pulse-cta",
+          "rounded-full bg-primary text-primary-foreground font-semibold glow-red hover:bg-maroon hover:-translate-y-0.5 transition-all",
       },
       size: {
         default: "h-9 px-4 py-2",

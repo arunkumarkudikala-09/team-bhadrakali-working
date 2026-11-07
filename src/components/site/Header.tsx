@@ -12,51 +12,51 @@ const links = [
 export function Header() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/60 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+    <header className="sticky top-4 z-50 px-4">
+      <div className="glass mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pl-5 pr-2">
+        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
           <span
             aria-hidden
-            className="block h-9 w-9 bg-contain bg-center bg-no-repeat"
+            className="block size-8 bg-contain bg-center bg-no-repeat"
             style={{ backgroundImage: "url(/TEAM_BHADRAKALI_Logo.png)" }}
           />
-          <span className="font-display text-sm tracking-[0.2em]">
-            TEAM <span className="text-primary">BHADRAKALI</span>
+          <span className="font-display text-sm font-bold tracking-tight text-maroon">
+            Team <span className="text-primary">Bhadrakali</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
             <Link
               key={l.to}
               to={l.to}
               activeOptions={{ exact: true }}
-              className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
-              activeProps={{ className: "!text-primary" }}
+              className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-maroon"
+              activeProps={{ className: "!bg-accent !text-maroon" }}
             >
               {l.label}
             </Link>
           ))}
           <Link
             to="/apply"
-            className="bg-primary px-5 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-colors hover:bg-maroon"
+            className="glow-red ml-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-maroon"
           >
             Apply Now
           </Link>
         </nav>
-        <button className="md:hidden" aria-label="Toggle menu" onClick={() => setOpen(!open)}>
+        <button className="mr-3 md:hidden" aria-label="Toggle menu" onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </button>
       </div>
       {open && (
-        <nav className="flex flex-col gap-6 border-t border-border px-6 py-8 md:hidden">
+        <nav className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-4 md:hidden">
           {[...links, { to: "/apply", label: "Apply Now" } as const].map((l) => (
             <Link
               key={l.to}
               to={l.to}
               onClick={() => setOpen(false)}
               activeOptions={{ exact: true }}
-              activeProps={{ className: "text-primary" }}
-              className="font-display text-2xl uppercase"
+              activeProps={{ className: "bg-accent text-primary" }}
+              className="rounded-xl px-4 py-3 font-medium text-maroon"
             >
               {l.label}
             </Link>

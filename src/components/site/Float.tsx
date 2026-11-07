@@ -13,10 +13,10 @@ export function Float({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 48 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ type: "spring", stiffness: 110, damping: 14, delay }}
     >
       {children}
     </motion.div>
@@ -25,6 +25,8 @@ export function Float({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="mb-6 text-xs font-bold uppercase tracking-[0.35em] text-primary">{children}</p>
+    <span className="glass mb-6 inline-flex rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+      {children}
+    </span>
   );
 }
