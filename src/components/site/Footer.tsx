@@ -1,13 +1,18 @@
 import { Link } from "@tanstack/react-router";
+import logoAsset from "@/assets/TEAM_BHADRAKALI_Logo.png.asset.json";
 
 export function Footer() {
   return (
     <footer className="mt-24 bg-card shadow-soft">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="font-display text-2xl font-bold text-maroon">
-            Team <span className="text-primary">Bhadrakali</span>
-          </p>
+          <img
+            src={logoAsset.url}
+            alt="Team Bhadrakali"
+            className="h-14 w-auto"
+            width={862}
+            height={469}
+          />
           <p className="mt-4 max-w-sm text-sm text-muted-foreground">
             A growth engine for ambitious brands — from Hyderabad to the world.
           </p>

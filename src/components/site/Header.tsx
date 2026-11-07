@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import logoAsset from "@/assets/TEAM_BHADRAKALI_Logo.png.asset.json";
 
 const links = [
   { to: "/", label: "Home" },
@@ -14,15 +15,14 @@ export function Header() {
   return (
     <header className="sticky top-4 z-50 px-4">
       <div className="glass mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pl-5 pr-2">
-        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <span
-            aria-hidden
-            className="block size-8 bg-contain bg-center bg-no-repeat"
-            style={{ backgroundImage: "url(/TEAM_BHADRAKALI_Logo.png)" }}
+        <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
+          <img
+            src={logoAsset.url}
+            alt="Team Bhadrakali"
+            className="h-10 w-auto"
+            width={862}
+            height={469}
           />
-          <span className="font-display text-sm font-bold tracking-tight text-maroon">
-            Team <span className="text-primary">Bhadrakali</span>
-          </span>
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
