@@ -15,42 +15,36 @@ export const Route = createFileRoute("/services")({
 });
 
 const services = [
-  { t: "Local & Global SEO", d: "Own the map pack in Hyderabad and page one worldwide.", I: Search },
-  { t: "Performance Marketing", d: "ROI-obsessed paid media across Meta, Google & LinkedIn.", I: Target },
-  { t: "UI/UX Design", d: "Conversion-first interfaces that feel premium and sell.", I: PenTool },
-  { t: "Viral Content Creation", d: "Short-form video and stories engineered to spread.", I: Flame },
+  { t: "Local & Global SEO", d: "Own the Hyderabad map pack and page one worldwide.", I: Search, span: "md:col-span-2", g: "from-peach/60 via-card/70 to-blush/60 hover:from-blush/70 hover:to-peach/80" },
+  { t: "Performance Marketing", d: "ROI-obsessed paid media across Meta, Google & LinkedIn.", I: Target, span: "md:row-span-2", g: "from-primary/15 via-card/70 to-coral/30 hover:from-coral/30 hover:to-primary/25" },
+  { t: "UI/UX Design", d: "Conversion-first interfaces that feel premium and sell.", I: PenTool, span: "", g: "from-blush/70 via-card/70 to-maroon/10 hover:from-maroon/15 hover:to-blush/80" },
+  { t: "Viral Content Creation", d: "Short-form video and stories engineered to spread.", I: Flame, span: "", g: "from-coral/30 via-card/70 to-peach/60 hover:from-peach/70 hover:to-coral/40" },
 ];
 
 function ServicesPage() {
   return (
-    <section className="px-6 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl">
-        <Float><Eyebrow>Services</Eyebrow></Float>
-        <Float delay={0.1}>
-          <h1 className="max-w-5xl text-5xl leading-none sm:text-8xl">Engineering Market <span className="text-primary">Dominance.</span></h1>
-        </Float>
-        <ul className="mt-24 border-t border-border">
-          {services.map(({ t, d, I }, i) => (
-            <Float key={t} delay={0.08 * i}>
-              <li>
-                <Link to="/apply" className="group relative flex items-center justify-between gap-6 overflow-hidden border-b border-border py-10 sm:py-14">
-                  <span className="absolute inset-0 -z-10 origin-left scale-x-0 bg-maroon/40 transition-transform duration-700 ease-out group-hover:scale-x-100" />
-                  <div className="flex items-baseline gap-6 sm:gap-10">
-                    <span className="text-xs font-bold tracking-[0.3em] text-muted-foreground">0{i + 1}</span>
-                    <div>
-                      <h2 className="text-3xl uppercase transition-colors group-hover:text-primary sm:text-6xl lg:text-7xl">{t}</h2>
-                      <p className="mt-3 max-h-0 overflow-hidden text-muted-foreground opacity-0 transition-all duration-500 group-hover:max-h-12 group-hover:opacity-100">{d}</p>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-4">
-                    <I className="size-10 -translate-y-4 text-primary opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 sm:!size-16" strokeWidth={1.25} />
-                    <ArrowUpRight className="size-8 transition-transform group-hover:rotate-45" />
-                  </div>
-                </Link>
-              </li>
+    <section className="px-6 py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="text-center">
+          <Float><Eyebrow>Services</Eyebrow></Float>
+          <Float delay={0.1}><h1 className="mx-auto max-w-4xl text-5xl font-extrabold sm:text-7xl">Engineering <span className="text-gradient">Market Dominance.</span></h1></Float>
+        </div>
+        <div className="mt-16 grid auto-rows-[minmax(240px,auto)] gap-6 md:grid-cols-3">
+          {services.map(({ t, d, I, span, g }, i) => (
+            <Float key={t} delay={0.1 * i} className={span}>
+              <Link to="/apply" className={`group flex h-full flex-col justify-between rounded-2xl border border-card bg-gradient-to-br p-8 shadow-soft backdrop-blur-xl transition-all duration-700 hover:-translate-y-1 ${g}`}>
+                <div className="flex items-start justify-between">
+                  <div className="glow-red inline-flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground transition-transform group-hover:rotate-6"><I className="!size-6" /></div>
+                  <ArrowUpRight className="text-maroon transition-transform group-hover:rotate-45" />
+                </div>
+                <div className="mt-10">
+                  <h2 className="text-2xl font-bold sm:text-3xl">{t}</h2>
+                  <p className="mt-2 text-muted-foreground">{d}</p>
+                </div>
+              </Link>
             </Float>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

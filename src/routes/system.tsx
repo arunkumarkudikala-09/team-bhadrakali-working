@@ -1,4 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { Search, Megaphone, MousePointerClick, Clapperboard } from "lucide-react";
 import { Float, Eyebrow } from "@/components/site/Float";
 
 export const Route = createFileRoute("/system")({
@@ -14,39 +16,43 @@ export const Route = createFileRoute("/system")({
 });
 
 const steps = [
-  { t: "Technical SEO", d: "We rebuild your foundation — site speed, crawlability, schema and search intent — so Google and your buyers find you first.", k: "Foundation" },
-  { t: "Performance Marketing", d: "Meta, Google and LinkedIn campaigns engineered around unit economics. Every rupee tracked, every dollar accountable.", k: "Acceleration" },
-  { t: "UI/UX Optimization", d: "Traffic is useless without conversion. We redesign funnels and landing pages to turn visitors into qualified leads.", k: "Conversion" },
-  { t: "Content Creation", d: "Scroll-stopping video and editorial content that builds authority and compounds reach long after it's posted.", k: "Authority" },
+  { I: Search, c: "bg-peach text-maroon", t: "Technical SEO", d: "Site speed, crawlability, schema and search intent — so Google and buyers find you first." },
+  { I: Megaphone, c: "bg-coral text-primary-foreground", t: "Performance Marketing", d: "Meta, Google & LinkedIn campaigns built around unit economics. Every rupee accountable." },
+  { I: MousePointerClick, c: "bg-primary text-primary-foreground", t: "UI/UX Optimization", d: "Funnels and landing pages redesigned to turn visitors into qualified leads." },
+  { I: Clapperboard, c: "bg-maroon text-primary-foreground", t: "Content Creation", d: "Scroll-stopping video and stories that build authority and compound reach." },
 ];
 
 function SystemPage() {
+  const [active, setActive] = useState(0);
   return (
-    <section className="px-6 py-24 sm:py-32">
-      <div className="mx-auto max-w-5xl">
-        <Float><Eyebrow>The Bhadrakali System</Eyebrow></Float>
-        <Float delay={0.1}>
-          <h1 className="text-6xl leading-none sm:text-8xl">The Growth <span className="text-primary">Engine.</span></h1>
-        </Float>
-        <Float delay={0.2}>
-          <p className="mt-8 max-w-xl text-lg text-muted-foreground">Four stages. One compounding system. Each step feeds the next.</p>
-        </Float>
+    <section className="px-6 py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="text-center">
+          <Float><Eyebrow>The Bhadrakali System</Eyebrow></Float>
+          <Float delay={0.1}><h1 className="text-5xl font-extrabold sm:text-7xl">The <span className="text-gradient">Growth Engine.</span></h1></Float>
+          <Float delay={0.2}><p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">Four stages. One compounding pipeline. Each step feeds the next.</p></Float>
+        </div>
 
-        <div className="relative mt-24">
-          <div className="timeline-line absolute left-4 top-0 h-full w-px sm:left-1/2" aria-hidden />
-          <ol className="space-y-24">
-            {steps.map((s, i) => (
-              <li key={s.t} className={`relative pl-14 sm:w-1/2 sm:pl-0 ${i % 2 ? "sm:ml-auto sm:pl-16" : "sm:pr-16 sm:text-right"}`}>
-                <span className={`absolute left-4 top-2 size-3 -translate-x-1/2 bg-primary ring-8 ring-maroon/40 ${i % 2 ? "sm:left-0" : "sm:left-full"}`} />
-                <Float delay={0.05}>
-                  <p className="font-display text-7xl text-outline sm:text-8xl">0{i + 1}</p>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.3em] text-primary">{s.k}</p>
-                  <h2 className="mt-2 text-3xl sm:text-4xl">{s.t}</h2>
-                  <p className="mt-4 text-muted-foreground">{s.d}</p>
-                </Float>
-              </li>
+        <div className="relative mt-20">
+          <div className="bg-pipeline absolute left-0 right-0 top-1/2 hidden h-1 -translate-y-1/2 rounded-full opacity-40 lg:block" aria-hidden />
+          <div className="grid gap-6 lg:grid-cols-4 lg:gap-0">
+            {steps.map(({ I, c, t, d }, i) => (
+              <Float key={t} delay={0.12 * i} className={`lg:-mx-2 ${i % 2 ? "lg:mt-24" : ""}`}>
+                <button
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  className={`glass relative w-full rounded-2xl p-7 text-left transition-all duration-500 ${active === i ? "z-10 -translate-y-2 scale-[1.04]" : "opacity-90"}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className={`inline-flex size-12 items-center justify-center rounded-xl ${c}`}><I /></div>
+                    <span className="font-display text-4xl font-extrabold text-border">0{i + 1}</span>
+                  </div>
+                  <h2 className="mt-6 text-xl font-bold">{t}</h2>
+                  <p className="mt-3 text-sm text-muted-foreground">{d}</p>
+                </button>
+              </Float>
             ))}
-          </ol>
+          </div>
         </div>
       </div>
     </section>
