@@ -2,10 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/TEAM_BHADRAKALI_Logo.png.asset.json";
+import { Button } from "@/components/ui/button";
 
 const links = [
   { to: "/", label: "Home" },
-  { to: "/system", label: "The System" },
+  { to: "/about", label: "About & Workflow" },
   { to: "/services", label: "Services" },
   { to: "/outcomes", label: "Outcomes" },
 ] as const;
@@ -43,9 +44,9 @@ export function Header() {
             Apply Now
           </Link>
         </nav>
-        <button className="mr-3 md:hidden" aria-label="Toggle menu" onClick={() => setOpen(!open)}>
+        <Button variant="ghost" size="icon" className="mr-3 size-11 md:hidden" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
-        </button>
+        </Button>
       </div>
       {open && (
         <nav className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-4 md:hidden">

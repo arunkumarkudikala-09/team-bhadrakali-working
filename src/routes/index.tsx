@@ -2,57 +2,55 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Funnel, Wallet, Eye, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Float, Eyebrow } from "@/components/site/Float";
+import { agencyHead, trustMetrics } from "@/lib/agency";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Team Bhadrakali — Predictable Growth for Ambitious Brands" },
-      { name: "description", content: "Hyderabad-born growth agency fixing broken funnels and wasted ad spend for brands worldwide." },
-      { property: "og:title", content: "Team Bhadrakali — Predictable Growth" },
-      { property: "og:description", content: "We fix broken funnels, eliminate wasted ad spend, and make your brand impossible to ignore." },
-    ],
-  }),
+  head: () => agencyHead("/", "Team Bhadrakali — Predictable Growth & SEO Dominance", "We build high-converting digital pipelines that eliminate wasted ad spend and scale revenue globally. SEO and performance marketing for ambitious brands."),
   component: Index,
 });
-
-const stats = [
-  { v: "$2M+", l: "Ad Spend Managed" },
-  { v: "300%", l: "Avg ROI" },
-  { v: "40+", l: "Brands Scaled Globally" },
-  { v: "48h", l: "Strategy Turnaround" },
-];
 
 const fixes = [
   { I: Wallet, t: "Wasted ad spend, eliminated", d: "We audit every campaign, cut what bleeds money and reinvest in what converts." },
   { I: Funnel, t: "Broken funnels, rebuilt", d: "From first click to checkout, we remove friction so more visitors become buyers." },
-  { I: Eye, t: "Invisible brands, unmissable", d: "SEO and content that put you in front of the right buyers — locally and globally." },
+  { I: Eye, t: "Search visibility, engineered", d: "We align technical SEO, search intent and authoritative content to connect your brand with high-intent buyers." },
 ];
 
 function Index() {
   return (
     <>
-      <section className="flex min-h-[92vh] items-center justify-center px-6 pt-10">
+      <section className="flex items-center justify-center px-6 pb-12 pt-20 sm:pb-16 sm:pt-24">
         <div className="mx-auto max-w-5xl text-center">
-          <Float><Eyebrow>Hyderabad · Global growth partner</Eyebrow></Float>
+          <Float><Eyebrow>Team Bhadrakali · Global growth partner</Eyebrow></Float>
           <Float delay={0.1}>
-            <h1 className="text-5xl font-extrabold leading-[1.02] sm:text-7xl lg:text-8xl">
-              <span className="text-gradient">Predictable Growth</span> for Ambitious Brands
+            <h1 className="text-4xl font-extrabold leading-[1.12] sm:text-6xl lg:text-7xl">
+              <span className="text-gradient">Predictable Growth & SEO Dominance</span> for Ambitious Brands.
             </h1>
           </Float>
           <Float delay={0.2}>
             <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-              We fix broken funnels, eliminate wasted ad spend, and make your brand impossible to ignore.
+              We build high-converting digital pipelines that eliminate wasted ad spend and scale revenue globally.
             </p>
           </Float>
           <Float delay={0.3} className="mt-10 flex flex-wrap justify-center gap-4">
             <Button asChild variant="shakti" size="xl">
-              <Link to="/apply">Scale Your Brand <ArrowRight /></Link>
+              <Link to="/apply">Get My Free Growth Audit <ArrowRight /></Link>
             </Button>
             <Button asChild variant="secondary" size="xl" className="rounded-full">
-              <Link to="/system">See the System</Link>
+              <Link to="/about">How We Work</Link>
             </Button>
           </Float>
         </div>
+      </section>
+
+      <section aria-label="Client growth metrics" className="border-y border-border bg-card/50 px-6 py-9 backdrop-blur-xl">
+        <Float className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-3">
+          {trustMetrics.map((metric) => (
+            <div key={metric.label} className="text-center">
+              <p className="font-display text-4xl font-extrabold text-maroon">{metric.value}</p>
+              <p className="mt-2 text-sm font-medium text-muted-foreground">{metric.label}</p>
+            </div>
+          ))}
+        </Float>
       </section>
 
       <section className="px-6 py-20">
@@ -75,18 +73,6 @@ function Index() {
         </div>
       </section>
 
-      <section className="px-6 py-16">
-        <Float className="mx-auto max-w-6xl">
-          <div className="glass grid grid-cols-2 gap-8 rounded-3xl p-10 md:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.l} className="text-center">
-                <p className="font-display text-4xl font-extrabold text-maroon sm:text-5xl">{s.v}</p>
-                <p className="mt-2 text-sm font-medium text-foreground">{s.l}</p>
-              </div>
-            ))}
-          </div>
-        </Float>
-      </section>
     </>
   );
 }
