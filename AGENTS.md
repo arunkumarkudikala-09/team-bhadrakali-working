@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project architecture
+- Keep the five content pages on TanStack file routes; /system permanently redirects to /about to preserve existing links.
+- Centralize page metadata, business schema, campaign values, and budget validation in the browser-safe agency module to keep pages and tests consistent.
+- Keep the application form presentation-only until delivery is connected; never show a false received or queued confirmation.

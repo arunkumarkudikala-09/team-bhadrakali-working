@@ -18,15 +18,14 @@ export function Footer() {
           </p>
         </div>
         <div className="text-sm text-muted-foreground">
-          <p className="mb-4 text-sm font-semibold text-foreground">Hyderabad HQ</p>
-          <p>Plot No. 00, Jubilee Hills</p>
-          <p>Hyderabad, Telangana 500033</p>
-          <p>India</p>
+          <p className="mb-4 text-sm font-semibold text-foreground">Remote by design</p>
+          <p>Serving Hyderabad & brands worldwide.</p>
+          <p className="mt-2">Online delivery. Connected growth.</p>
         </div>
         <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <p className="mb-2 text-sm font-semibold text-foreground">Global</p>
-          <a href="mailto:hello@teambhadrakali.com" className="hover:text-primary">hello@teambhadrakali.com</a>
-          <a href="tel:+910000000000" className="hover:text-primary">+91 00000 00000</a>
+          <Link to="/about" className="hover:text-primary">About & how we work</Link>
+          <Link to="/services" className="hover:text-primary">Explore our services</Link>
           <Link to="/apply" className="font-medium text-primary">Apply for a partnership →</Link>
         </div>
       </div>

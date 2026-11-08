@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 
 export function Float({
@@ -10,10 +10,11 @@ export function Float({
   delay?: number;
   className?: string;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 40, scale: 0.96 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 40, scale: 0.96 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ type: "spring", stiffness: 110, damping: 14, delay }}
