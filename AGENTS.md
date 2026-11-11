@@ -33,3 +33,4 @@ use the editor.
 - Keep the five content pages on TanStack file routes; /system permanently redirects to /about to preserve existing links.
 - Centralize page metadata, business schema, campaign values, and budget validation in the browser-safe agency module to keep pages and tests consistent.
 - Keep the application form presentation-only until delivery is connected; never show a false received or queued confirmation.
+- Keep analyzer scoring, hidden-revenue math, bottleneck→service and fault→solution mappings as pure functions in the growth-system module so the analyzer, the Solution Architecture terminal and tests share one source.

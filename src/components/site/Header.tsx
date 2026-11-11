@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const links = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About & Workflow" },
+  { to: "/about", label: "How We Work" },
   { to: "/services", label: "Services" },
   { to: "/outcomes", label: "Outcomes" },
 ] as const;
@@ -39,9 +39,9 @@ export function Header() {
           ))}
           <Link
             to="/apply"
-            className="glow-red ml-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-maroon"
+            className="glow-red ml-2 rounded-full bg-primary px-5 py-3 text-sm transition-transform hover:-translate-y-0.5 font-semibold text-primary-foreground transition-colors hover:bg-maroon"
           >
-            Apply Now
+            Solution Architecture
           </Link>
         </nav>
         <Button variant="ghost" size="icon" className="mr-3 size-11 md:hidden" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -50,7 +50,7 @@ export function Header() {
       </div>
       {open && (
         <nav className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-4 md:hidden">
-          {[...links, { to: "/apply", label: "Apply Now" } as const].map((l) => (
+          {[...links, { to: "/apply", label: "Solution Architecture" } as const].map((l) => (
             <Link
               key={l.to}
               to={l.to}
