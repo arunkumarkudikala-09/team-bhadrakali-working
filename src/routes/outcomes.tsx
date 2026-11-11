@@ -14,12 +14,12 @@ function OutcomesPage() {
         <Float className="mx-auto max-w-4xl text-center">
           <Eyebrow>Commercial outcomes · Data room</Eyebrow>
           <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Audited Client <span className="text-gradient">Campaigns & ROI.</span></h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">Acquisition efficiency, revenue return and search visibility. The commercial measures that matter.</p>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">Your growth should be measured in revenue, not vanity metrics. Here is what reliable, scalable systems delivered for brands like yours.</p>
         </Float>
         <div className="mt-16 space-y-8">
           {campaigns.map((campaign, index) => (
             <Float key={campaign.id} delay={index * 0.08}>
-              <article className="glass grid gap-8 rounded-2xl p-6 sm:p-9 lg:grid-cols-2 lg:gap-12">
+              <article className="glass grid gap-8 rounded-2xl p-6 transition-transform duration-500 hover:-translate-y-1 sm:p-9 lg:grid-cols-2 lg:gap-12">
                 <div>
                   <p className="text-xs font-semibold uppercase text-primary">{campaign.id} / {campaign.sector} · {campaign.discipline}</p>
                   <h2 className="mt-4 text-2xl font-bold sm:text-3xl">{campaign.title}</h2>
