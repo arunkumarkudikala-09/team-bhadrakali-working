@@ -28,8 +28,8 @@ export function GrowthAnalyzer() {
   const [valueIdx, setValueIdx] = useState(3);
   const [bottleneck, setBottleneck] = useState<BottleneckId>("ux");
 
-  const traffic = trafficSteps[trafficIdx];
-  const value = valueSteps[valueIdx];
+  const traffic = trafficSteps[trafficIdx] ?? trafficSteps[0];
+  const value = valueSteps[valueIdx] ?? valueSteps[0];
   const result = diagnose(traffic, conversion, value, bottleneck);
 
   return (
@@ -49,21 +49,21 @@ export function GrowthAnalyzer() {
               <label id="traffic-label" className="flex items-center text-sm font-semibold text-maroon">Your monthly traffic<Hint text="Unique visitors reaching your website or landing pages each month." /></label>
               <span className="font-display text-lg font-bold text-primary">{formatCount(traffic)}</span>
             </div>
-            <Slider aria-labelledby="traffic-label" className="mt-4" min={0} max={trafficSteps.length - 1} step={1} value={[trafficIdx]} onValueChange={([v]) => setTrafficIdx(v)} />
+            <Slider aria-labelledby="traffic-label" className="mt-4" min={0} max={trafficSteps.length - 1} step={1} value={[trafficIdx]} onValueChange={([v]) => v !== undefined && setTrafficIdx(v)} />
           </div>
           <div>
             <div className="flex items-center justify-between">
               <label id="conversion-label" className="flex items-center text-sm font-semibold text-maroon">Your conversion rate<Hint text="The share of visitors who become a lead or customer." /></label>
               <span className="font-display text-lg font-bold text-primary">{conversion.toFixed(1)}%</span>
             </div>
-            <Slider aria-labelledby="conversion-label" className="mt-4" min={conversionRange.min} max={conversionRange.max} step={conversionRange.step} value={[conversion]} onValueChange={([v]) => setConversion(v)} />
+            <Slider aria-labelledby="conversion-label" className="mt-4" min={conversionRange.min} max={conversionRange.max} step={conversionRange.step} value={[conversion]} onValueChange={([v]) => v !== undefined && setConversion(v)} />
           </div>
           <div>
             <div className="flex items-center justify-between">
               <label id="value-label" className="flex items-center text-sm font-semibold text-maroon">Value of one customer<Hint text="Average revenue from one conversion. Used only to estimate hidden revenue." /></label>
               <span className="font-display text-lg font-bold text-primary">{formatInr(value)}</span>
             </div>
-            <Slider aria-labelledby="value-label" className="mt-4" min={0} max={valueSteps.length - 1} step={1} value={[valueIdx]} onValueChange={([v]) => setValueIdx(v)} />
+            <Slider aria-labelledby="value-label" className="mt-4" min={0} max={valueSteps.length - 1} step={1} value={[valueIdx]} onValueChange={([v]) => v !== undefined && setValueIdx(v)} />
           </div>
           <div>
             <p id="bottleneck-label" className="text-sm font-semibold text-maroon">Your primary bottleneck</p>

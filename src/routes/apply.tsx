@@ -14,7 +14,7 @@ import { agencyHead, budgetOptions, isValidBudget } from "@/lib/agency";
 import { isFault, solutionsFor, systemFaults, timelineOptions, type FaultId } from "@/lib/growth-system";
 
 export const Route = createFileRoute("/apply")({
-  validateSearch: (search: Record<string, unknown>): { fault?: FaultId } => (isFault(search.fault) ? { fault: search.fault } : {}),
+  validateSearch: (search: Record<string, unknown>): { fault?: FaultId } => (isFault(search["fault"]) ? { fault: search["fault"] } : {}),
   head: () => agencyHead("/apply", "Solution Architecture — Diagnose Your Growth System | Team Bhadrakali", "Tell us what system fault you need solved. Get a live solution matrix for your brand and book a System Architecture Strategy Call with Team Bhadrakali."),
   component: ApplyPage,
 });
