@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { HealthRing } from "./HealthRing";
-import { bottlenecks, conversionRange, diagnose, formatCount, formatInr, trafficSteps, valueSteps, type BottleneckId } from "@/lib/growth-system";
+import { bottlenecks, conversionRange, diagnose, formatCount, formatInr, healthBenchmarks, trafficSteps, valueSteps, type BottleneckId } from "@/lib/growth-system";
 
 const faultForService = { seo: "invisible-seo", performance: "high-cpa", "web-design": "poor-conversion", content: "content-pipeline" } as const;
 
@@ -39,7 +39,7 @@ export function GrowthAnalyzer() {
           <span className="relative flex size-2.5"><span className="absolute inline-flex size-full animate-ping rounded-full bg-primary/60" /><span className="relative inline-flex size-2.5 rounded-full bg-primary" /></span>
           <p className="text-sm font-semibold text-maroon">Growth Architecture Analyzer</p>
         </div>
-        <p className="text-xs text-muted-foreground">Live estimate from your inputs</p>
+        <p className="text-xs text-muted-foreground">Calculated live from your numbers</p>
       </div>
 
       <div className="grid gap-10 p-6 sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
@@ -53,14 +53,14 @@ export function GrowthAnalyzer() {
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label id="conversion-label" className="flex items-center text-sm font-semibold text-maroon">Your conversion rate<Hint text="The share of visitors who become a lead or customer." /></label>
+              <label id="conversion-label" className="flex items-center text-sm font-semibold text-maroon">Your conversion rate<Hint text={`The share of visitors who become a lead or customer. Below ${healthBenchmarks.critical}% is Critical, ${healthBenchmarks.critical}–${healthBenchmarks.robust}% is Stable, above ${healthBenchmarks.robust}% is Robust.`} /></label>
               <span className="font-display text-lg font-bold text-primary">{conversion.toFixed(1)}%</span>
             </div>
             <Slider aria-labelledby="conversion-label" className="mt-4" min={conversionRange.min} max={conversionRange.max} step={conversionRange.step} value={[conversion]} onValueChange={([v]) => v !== undefined && setConversion(v)} />
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label id="value-label" className="flex items-center text-sm font-semibold text-maroon">Value of one customer<Hint text="Average revenue from one conversion. Used only to estimate hidden revenue." /></label>
+              <label id="value-label" className="flex items-center text-sm font-semibold text-maroon">Value of one customer<Hint text="Average revenue from one converted customer." /></label>
               <span className="font-display text-lg font-bold text-primary">{formatInr(value)}</span>
             </div>
             <Slider aria-labelledby="value-label" className="mt-4" min={0} max={valueSteps.length - 1} step={1} value={[valueIdx]} onValueChange={([v]) => v !== undefined && setValueIdx(v)} />
@@ -79,12 +79,24 @@ export function GrowthAnalyzer() {
 
         <div className="flex flex-col items-center rounded-2xl bg-gradient-to-br from-blush/50 via-card/60 to-peach/50 p-6 text-center sm:p-8" aria-live="polite">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-primary">System health score</p>
-          <HealthRing score={result.score} label={result.label} />
+          <HealthRing score={result.score} label={result.label} tier={result.tier} />
+          <dl className="mt-6 grid w-full grid-cols-3 gap-2 text-left">
+            {[
+              { k: "Conversions / mo", v: result.conversions.toLocaleString("en-IN") },
+              { k: "Baseline revenue / mo", v: formatInr(result.baseline) },
+              { k: "Recovered at +1%", v: `+${formatInr(result.revenue)}` },
+            ].map((m) => (
+              <div key={m.k} className="rounded-xl border border-border bg-card/70 px-3 py-3">
+                <dt className="text-[11px] font-semibold uppercase leading-tight tracking-wider text-muted-foreground">{m.k}</dt>
+                <dd className="mt-1 font-display text-lg font-bold tracking-tight text-maroon tabular-nums">{m.v}</dd>
+              </div>
+            ))}
+          </dl>
           <AnimatePresence mode="wait">
-            <motion.div key={`${result.pillar}-${result.revenue}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="mt-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Scalability diagnosis</p>
-              <p className="mt-2 font-display text-xl font-bold text-maroon">{result.headline}</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{result.detail}</p>
+            <motion.div key={`${result.tier}-${result.revenue}`} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="mt-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Telemetry output</p>
+              <p className="mt-2 font-display text-xl font-bold tracking-tight text-maroon">{result.headline}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Weakest pillar: <span className="font-semibold text-maroon">{result.pillar}</span>. Baseline = traffic × conversion rate × customer value.</p>
             </motion.div>
           </AnimatePresence>
           <div className="mt-auto flex w-full flex-col gap-3 pt-8">
@@ -95,7 +107,7 @@ export function GrowthAnalyzer() {
               Or run a full system diagnosis →
             </Link>
           </div>
-          <p className="mt-4 text-xs text-muted-foreground">Indicative only. Based on the numbers you entered, not an audit.</p>
+          <p className="mt-4 text-xs text-muted-foreground">Calculated from the numbers you entered. Health tiers use conversion-rate benchmarks; this is not an audit.</p>
         </div>
       </div>
     </div>
