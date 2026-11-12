@@ -103,7 +103,7 @@ function ApplyPage() {
                 <div role="status" className="flex flex-col items-start gap-4 p-6 sm:p-10">
                   <CircleCheck className="size-10 text-health-robust" aria-hidden="true" />
                   <h2 className="text-2xl font-bold">Application received.</h2>
-                  <p className="max-w-md text-muted-foreground">Thanks, {form.name.split(" ")[0]}. Your diagnosis for <span className="font-semibold text-maroon">{faultLabel}</span> is in our queue. Book your strategy call alongside to lock in a time.</p>
+                  <p className="max-w-md text-muted-foreground">Thanks, {form.name.split(" ")[0]}. Your diagnosis for <span className="font-semibold text-maroon">{faultLabel}</span> has been saved for our team.{isCalendlyUrl(calendlyUrl) ? " Book your strategy call alongside to lock in a time." : ""}</p>
                 </div>
               ) : (
               <div className="p-6 sm:p-10">
