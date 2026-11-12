@@ -6,6 +6,24 @@ export const trustMetrics = [
   { value: "85+", label: "#1 Google Rankings" },
 ] as const;
 
+/** Official operational hubs supplied by the agency. */
+export const operationalHubs = [
+  { name: "Hyderabad HQ", locality: "Hyderabad", region: "Telangana", country: "India" },
+  { name: "Warangal", locality: "Warangal", region: "Telangana", country: "India" },
+] as const;
+
+/** Paste the agency's Calendly scheduling link here (e.g. https://calendly.com/your-name/strategy-call). Empty = not connected. */
+export const calendlyUrl = "";
+
+export function isCalendlyUrl(value: string) {
+  try {
+    const u = new URL(value);
+    return u.protocol === "https:" && (u.hostname === "calendly.com" || u.hostname.endsWith(".calendly.com"));
+  } catch {
+    return false;
+  }
+}
+
 export const budgetOptions = [
   { value: "under-50k", label: "<₹50k" },
   { value: "50k-2l", label: "₹50k–₹2L" },
@@ -41,7 +59,7 @@ export function agencyHead(path: string, title: string, description: string) {
         "@context": "https://schema.org",
         "@graph": [
           { "@type": "ProfessionalService", "@id": `${agencyUrl}/#agency`, name: "Team Bhadrakali", url: agencyUrl, description: "Remote digital marketing agency providing SEO, performance marketing, web design and content strategy.", areaServed: "Worldwide", hasOfferCatalog: { "@type": "OfferCatalog", name: "Digital growth services", itemListElement: ["Global & Local SEO", "Performance Marketing", "UI/UX Web Design", "Content & Social Media Strategy"].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })) } },
-          { "@type": "LocalBusiness", "@id": `${agencyUrl}/#hyderabad`, name: "Team Bhadrakali", url: agencyUrl, parentOrganization: { "@id": `${agencyUrl}/#agency` }, areaServed: { "@type": "City", name: "Hyderabad" } },
+          ...operationalHubs.map((hub) => ({ "@type": "LocalBusiness", "@id": `${agencyUrl}/#${hub.locality.toLowerCase()}`, name: `Team Bhadrakali — ${hub.name}`, url: agencyUrl, parentOrganization: { "@id": `${agencyUrl}/#agency` }, address: { "@type": "PostalAddress", addressLocality: hub.locality, addressRegion: hub.region, addressCountry: "IN" }, areaServed: { "@type": "City", name: hub.locality } })),
         ],
       }),
     }],

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { budgetOptions, isValidBudget, campaigns, trustMetrics } from "./agency";
+import { budgetOptions, isValidBudget, campaigns, trustMetrics, operationalHubs, isCalendlyUrl } from "./agency";
 
 describe("agency brief business values", () => {
   it("offers only the three supplied rupee budget ranges", () => {
@@ -25,5 +25,14 @@ describe("agency brief business values", () => {
   it("represents 190% more local inquiries, not 190% of baseline", () => {
     expect(campaigns[2].after - campaigns[2].before).toBe(190);
     expect(campaigns[2].secondary).toBe("#1");
+  });
+  it("lists Hyderabad HQ and Warangal, Telangana as the operational hubs", () => {
+    expect(operationalHubs.map((h) => `${h.name}, ${h.region}, ${h.country}`)).toEqual(["Hyderabad HQ, Telangana, India", "Warangal, Telangana, India"]);
+  });
+  it("only embeds https Calendly links", () => {
+    expect(isCalendlyUrl("https://calendly.com/team-bhadrakali/strategy-call")).toBe(true);
+    expect(isCalendlyUrl("http://calendly.com/x")).toBe(false);
+    expect(isCalendlyUrl("https://evil.example/calendly.com")).toBe(false);
+    expect(isCalendlyUrl("[YOUR_CALENDLY_LINK_HERE]")).toBe(false);
   });
 });
