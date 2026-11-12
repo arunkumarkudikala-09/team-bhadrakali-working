@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, Terminal } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, CircleCheck, Loader2, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Float, Eyebrow } from "@/components/site/Float";
-import { agencyHead, budgetOptions, isValidBudget } from "@/lib/agency";
+import { agencyHead, budgetOptions, calendlyUrl, isCalendlyUrl, isValidBudget } from "@/lib/agency";
+import { submitApplication } from "@/lib/applications.functions";
+import { applicationSchema } from "@/lib/applications";
 import { isFault, solutionsFor, systemFaults, timelineOptions, type FaultId } from "@/lib/growth-system";
 
 export const Route = createFileRoute("/apply")({
@@ -26,7 +29,9 @@ function ApplyPage() {
   const { fault: initialFault } = Route.useSearch();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ name: "", website: "", fault: (initialFault ?? "") as FaultId | "", budget: "", goal: "", timeline: "" });
-  const [sent, setSent] = useState(false);
+  const [company, setCompany] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const submit = useServerFn(submitApplication);
   const set = (k: keyof typeof form) => (v: string) => setForm((f) => ({ ...f, [k]: v }));
   const solutions = solutionsFor(form.fault);
   const faultLabel = systemFaults.find((f) => f.id === form.fault)?.label;
@@ -48,12 +53,23 @@ function ApplyPage() {
     return true;
   }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (status === "sending") return;
     if (!validateStep(step, e.currentTarget)) return;
     if (step < steps.length - 1) { setStep(step + 1); return; }
-    setSent(true);
-    toast.info("Your diagnosis is ready. Application delivery is not connected yet.");
+    const parsed = applicationSchema.safeParse({ ...form, company });
+    if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Please check your answers."); return; }
+    setStatus("sending");
+    try {
+      const res = await submit({ data: parsed.data });
+      if (!res.ok) throw new Error("not stored");
+      setStatus("sent");
+      toast.success("Application received. We'll review your system diagnosis.");
+    } catch {
+      setStatus("idle");
+      toast.error("We couldn't send your application. Please try again in a moment.");
+    }
   }
 
   return (
@@ -83,7 +99,18 @@ function ApplyPage() {
                 ))}
               </ol>
 
+              {status === "sent" ? (
+                <div role="status" className="flex flex-col items-start gap-4 p-6 sm:p-10">
+                  <CircleCheck className="size-10 text-health-robust" aria-hidden="true" />
+                  <h2 className="text-2xl font-bold">Application received.</h2>
+                  <p className="max-w-md text-muted-foreground">Thanks, {form.name.split(" ")[0]}. Your diagnosis for <span className="font-semibold text-maroon">{faultLabel}</span> is in our queue. Book your strategy call alongside to lock in a time.</p>
+                </div>
+              ) : (
               <div className="p-6 sm:p-10">
+                <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                  <label htmlFor="company">Company</label>
+                  <input id="company" name="company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} />
+                </div>
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.25 }} className="space-y-6">
                     {step === 0 && (
@@ -143,12 +170,12 @@ function ApplyPage() {
                   {step > 0 && (
                     <Button type="button" variant="ghost" size="lg" className="rounded-full" onClick={() => setStep(step - 1)}><ArrowLeft /> Back</Button>
                   )}
-                  <Button type="submit" variant="shakti" size="xl" className="ml-auto w-full sm:w-auto">
-                    {step < steps.length - 1 ? <>Continue <ArrowRight /></> : "Apply For Partnership"}
+                  <Button type="submit" variant="shakti" size="xl" className="ml-auto w-full sm:w-auto" disabled={status === "sending"}>
+                    {step < steps.length - 1 ? <>Continue <ArrowRight /></> : status === "sending" ? <><Loader2 className="animate-spin" /> Sending…</> : "Apply For Partnership"}
                   </Button>
                 </div>
-                {sent && <p role="status" className="mt-4 text-sm text-muted-foreground">Your details have not been sent. Application delivery is not connected yet.</p>}
               </div>
+              )}
             </form>
           </Float>
 
@@ -172,14 +199,32 @@ function ApplyPage() {
               </AnimatePresence>
             </aside>
 
-            <div className="flex min-h-[300px] flex-1 flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-blush/60 via-card/60 to-peach/60 p-10 text-center backdrop-blur-xl">
-              <CalendarDays className="size-12 text-primary" strokeWidth={1.25} />
-              <h2 className="font-display text-2xl font-bold text-maroon">System Architecture Strategy Call</h2>
-              <p className="max-w-xs text-sm text-muted-foreground">Calendly booking is not available yet.</p>
-            </div>
+            <StrategyCall />
           </Float>
         </div>
       </div>
     </section>
+  );
+}
+
+function StrategyCall() {
+  if (isCalendlyUrl(calendlyUrl)) {
+    const src = `${calendlyUrl}${calendlyUrl.includes("?") ? "&" : "?"}hide_gdpr_banner=1`;
+    return (
+      <div className="glass flex flex-1 flex-col overflow-hidden rounded-3xl">
+        <div className="flex items-center gap-3 border-b border-border px-6 py-4">
+          <CalendarDays className="size-4 text-primary" aria-hidden="true" />
+          <h2 className="text-sm font-semibold tracking-tight text-maroon">System Architecture Strategy Call</h2>
+        </div>
+        <iframe src={src} title="Book a System Architecture Strategy Call" className="h-[680px] w-full bg-card" loading="lazy" />
+      </div>
+    );
+  }
+  return (
+    <div className="flex min-h-[300px] flex-1 flex-col items-center justify-center gap-5 rounded-3xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-blush/60 via-card/60 to-peach/60 p-10 text-center backdrop-blur-xl">
+      <CalendarDays className="size-12 text-primary" strokeWidth={1.25} />
+      <h2 className="font-display text-2xl font-bold text-maroon">System Architecture Strategy Call</h2>
+      <p className="max-w-xs text-sm text-muted-foreground">Online booking opens here soon. Apply with the form and we'll schedule your call.</p>
+    </div>
   );
 }
