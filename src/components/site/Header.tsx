@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import logoAsset from "@/assets/TEAM_BHADRAKALI_Logo.png.asset.json";
+import { BrandLogo } from "./BrandLogo";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 
 const links = [
@@ -17,13 +18,7 @@ export function Header() {
     <header className="sticky top-4 z-50 px-4">
       <div className="glass mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full pl-5 pr-2">
         <Link to="/" className="flex items-center" onClick={() => setOpen(false)}>
-          <img
-            src={logoAsset.url}
-            alt="Team Bhadrakali"
-            className="h-10 w-auto"
-            width={862}
-            height={469}
-          />
+          <BrandLogo className="h-10 w-auto" />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
@@ -39,14 +34,18 @@ export function Header() {
           ))}
           <Link
             to="/apply"
-            className="glow-red ml-2 rounded-full bg-primary px-5 py-3 text-sm transition-transform hover:-translate-y-0.5 font-semibold text-primary-foreground transition-colors hover:bg-maroon"
+            className="glow-red ml-2 rounded-full bg-primary px-5 py-3 text-sm transition-transform hover:-translate-y-0.5 font-semibold text-primary-foreground transition-colors hover:bg-secondary"
           >
             Solution Architecture
           </Link>
+          <ThemeToggle className="ml-1" />
         </nav>
-        <Button variant="ghost" size="icon" className="mr-3 size-11 md:hidden" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>
+        <div className="flex items-center md:hidden">
+        <ThemeToggle />
+        <Button variant="ghost" size="icon" className="mr-3 size-11" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </Button>
+        </div>
       </div>
       {open && (
         <nav className="glass mx-auto mt-2 flex max-w-6xl flex-col gap-1 rounded-2xl p-4 md:hidden">
