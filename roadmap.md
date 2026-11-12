@@ -12,4 +12,12 @@
 - [x] Home: reliable / scalable / maintainable pillars, "you" copy, tooltips, parallax, staggered reveals.
 - [x] Services, About, Outcomes: user-directed copy, pillar tags, micro-interactions.
 - [x] Apply → "Solution Architecture" 3-step diagnostic terminal with live solution matrix + strategy call placeholder.
-- [ ] Verify desktop + mobile in the browser.
+- [x] Verify desktop + mobile in the browser.
+# Finalization brief (Nov 12)
+
+- [x] Save Solution Architecture applications to Lovable Cloud.
+- [ ] Email the agency on each application — blocked: needs a verified sender domain and the agency inbox address.
+- [ ] Embed Calendly — blocked: needs the real Calendly link (brief still had the placeholder).
+- [x] Deterministic analyzer math and benchmark health tiers.
+- [x] Light/dark theme toggle with theme-aware logo.
+- [x] Footer operational hubs (Hyderabad HQ, Warangal) and typography pass.

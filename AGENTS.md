@@ -32,5 +32,7 @@ use the editor.
 ## Project architecture
 - Keep the five content pages on TanStack file routes; /system permanently redirects to /about to preserve existing links.
 - Centralize page metadata, business schema, campaign values, and budget validation in the browser-safe agency module to keep pages and tests consistent.
-- Keep the application form presentation-only until delivery is connected; never show a false received or queued confirmation.
+- Application submissions are validated by the shared applications schema and inserted by a server function with the publishable client under an anon insert-only policy; show "received" only after the insert succeeds.
 - Keep analyzer scoring, hidden-revenue math, bottleneck→service and fault→solution mappings as pure functions in the growth-system module so the analyzer, the Solution Architecture terminal and tests share one source.
+- Theme is class-based (.dark on <html>) set by an inline head script from localStorage, with icons and logo variants switched via dark: classes, so SSR markup stays identical without a theme library.
+- The Calendly embed renders only when the agency module's calendly URL passes the https calendly.com check; otherwise a placeholder shows.
