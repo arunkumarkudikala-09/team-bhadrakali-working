@@ -28,20 +28,35 @@ export function getBottleneck(id: BottleneckId) {
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 
-/** Indicative 20–100 score: conversion rate (5% = full marks) weighs 50, traffic scale (1k→1M, log) weighs 30. */
-export function healthScore(traffic: number, conversionRate: number) {
-  const conv = clamp(conversionRate / 5, 0, 1);
-  const scale = clamp(Math.log10(Math.max(traffic, 1) / 1000) / 3, 0, 1);
-  return Math.round(20 + conv * 50 + scale * 30);
+/** Conversion-rate benchmarks: below 2% is Critical, 2–4% is Stable, above 4% is Robust. */
+export const healthBenchmarks = { critical: 2, robust: 4, topOfScale: 5 } as const;
+
+export type HealthTier = "critical" | "stable" | "robust";
+
+export function healthTier(conversionRate: number): HealthTier {
+  if (conversionRate < healthBenchmarks.critical) return "critical";
+  if (conversionRate > healthBenchmarks.robust) return "robust";
+  return "stable";
 }
 
-export function healthLabel(score: number) {
-  if (score < 45) return "Fragile";
-  if (score < 70) return "Leaking";
-  return "Resilient";
+export const healthTierLabel: Record<HealthTier, string> = { critical: "Critical", stable: "Stable", robust: "Robust" };
+
+/** 0–100 score on the conversion benchmark scale: each 1% of conversion = 20 points, 5% and above = 100. */
+export function healthScore(conversionRate: number) {
+  return Math.round(clamp(conversionRate / healthBenchmarks.topOfScale, 0, 1) * 100);
 }
 
-/** Extra monthly revenue from lifting conversion rate by one percentage point. */
+/** Monthly conversions = Traffic × (Conversion Rate / 100). */
+export function monthlyConversions(traffic: number, conversionRate: number) {
+  return traffic * (conversionRate / 100);
+}
+
+/** Baseline Revenue = Traffic × (Conversion Rate / 100) × Customer Value. */
+export function baselineRevenue(traffic: number, conversionRate: number, valuePerConversion: number) {
+  return Math.round(monthlyConversions(traffic, conversionRate) * valuePerConversion);
+}
+
+/** Recovered hidden revenue from lifting conversion rate by one percentage point: Traffic × 1% × Customer Value. */
 export function hiddenRevenue(traffic: number, valuePerConversion: number) {
   return Math.round(traffic * 0.01 * valuePerConversion);
 }
@@ -61,17 +76,18 @@ export function formatCount(n: number) {
 
 export function diagnose(traffic: number, conversionRate: number, value: number, bottleneckId: BottleneckId) {
   const b = getBottleneck(bottleneckId);
-  const score = healthScore(traffic, conversionRate);
+  const tier = healthTier(conversionRate);
   const revenue = hiddenRevenue(traffic, value);
-  const next = Math.round((conversionRate + 1) * 10) / 10;
   return {
-    score,
-    label: healthLabel(score),
+    score: healthScore(conversionRate),
+    tier,
+    label: healthTierLabel[tier],
     pillar: b.pillar as Pillar,
     service: b.service,
+    conversions: Math.round(monthlyConversions(traffic, conversionRate)),
+    baseline: baselineRevenue(traffic, conversionRate, value),
     revenue,
-    headline: `Your system lacks ${b.pillar}.`,
-    detail: `A 1% increase in conversion architecture (${conversionRate.toFixed(1)}% → ${next.toFixed(1)}%) yields ${formatInr(revenue)} in hidden revenue every month.`,
+    headline: `A 1% conversion increase yields ${formatInr(revenue)} in recovered hidden revenue.`,
   };
 }
 
