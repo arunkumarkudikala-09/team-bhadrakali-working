@@ -42,7 +42,8 @@ function ApplyPage() {
   const [form, setForm] = useState({ name: "", website: "", fault: (initialFault ?? "") as FaultId | "", budget: "", goal: "", timeline: "", email: "", countryCode: "+91", phone: "", role: "" });
   const [runsAds, setRunsAds] = useState<boolean | null>(null);
   const [wantsUpdates, setWantsUpdates] = useState(true);
-  const firstName = form.name.trim().split(" ")[0];
+  const firstName = form.name.trim().split(" ")[0] ?? "";
+  const intro = stepIntro[step] ?? stepIntro[0];
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const submit = useServerFn(submitApplication);
@@ -141,8 +142,8 @@ function ApplyPage() {
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.25 }} className="space-y-6">
                     <div>
-                      <h2 className="text-2xl font-bold">{step > 0 && firstName ? `${firstName}, ` : ""}{step > 0 && firstName ? stepIntro[step].title.charAt(0).toLowerCase() + stepIntro[step].title.slice(1) : stepIntro[step].title}</h2>
-                      <p className="mt-1 text-sm text-muted-foreground">{stepIntro[step].sub}</p>
+                      <h2 className="text-2xl font-bold">{step > 0 && firstName ? `${firstName}, ` : ""}{step > 0 && firstName ? intro.title.charAt(0).toLowerCase() + intro.title.slice(1) : intro.title}</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">{intro.sub}</p>
                     </div>
                     {step === 0 && (
                       <>
