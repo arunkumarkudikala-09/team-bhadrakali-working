@@ -8,6 +8,20 @@
       "when": 1794448533296,
       "tag": "0000_create_partnership_applications",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794967282839,
+      "tag": "0001_add_contact_fields_to_applications",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794967389502,
+      "tag": "0002_noop_check",
+      "breakpoints": true
     }
   ]
 }

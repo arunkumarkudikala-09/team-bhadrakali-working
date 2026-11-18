@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, CircleCheck, Loader2, Terminal } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, CircleCheck, Loader2, Lock, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Float, Eyebrow } from "@/components/site/Float";
 import { agencyHead, budgetOptions, calendlyUrl, isCalendlyUrl, isValidBudget } from "@/lib/agency";
 import { submitApplication } from "@/lib/applications.functions";
-import { applicationSchema } from "@/lib/applications";
+import { applicationSchema, countryCodes, roleOptions } from "@/lib/applications";
+import { Checkbox } from "@/components/ui/checkbox";
 import { isFault, solutionsFor, systemFaults, timelineOptions, type FaultId } from "@/lib/growth-system";
 
 export const Route = createFileRoute("/apply")({
@@ -23,12 +24,25 @@ export const Route = createFileRoute("/apply")({
 });
 
 const field = "h-12 rounded-xl bg-card/80 text-base";
-const steps = ["System Status", "Architecture Goals", "Deployment Timeline"] as const;
+const steps = ["About You", "System Status", "Goals & Timeline"] as const;
+const stepIntro = [
+  { title: "Tell us a bit about you", sub: "60 seconds. Then we build your growth map." },
+  { title: "Where's your system leaking?", sub: "Pick the one thing that hurts most right now." },
+  { title: "Last step — your finish line", sub: "Tell us what winning looks like for you." },
+] as const;
+const youGet = [
+  { n: "01", t: "A personal growth map", d: "Your exact leaks, ranked by the money they cost you." },
+  { n: "02", t: "A 30-minute strategy call", d: "With the people who'd run your account — no sales script." },
+  { n: "03", t: "Your first 3 fixes", d: "Actions you can use even if we never work together." },
+] as const;
 
 function ApplyPage() {
   const { fault: initialFault } = Route.useSearch();
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ name: "", website: "", fault: (initialFault ?? "") as FaultId | "", budget: "", goal: "", timeline: "" });
+  const [form, setForm] = useState({ name: "", website: "", fault: (initialFault ?? "") as FaultId | "", budget: "", goal: "", timeline: "", email: "", countryCode: "+91", phone: "", role: "" });
+  const [runsAds, setRunsAds] = useState<boolean | null>(null);
+  const [wantsUpdates, setWantsUpdates] = useState(true);
+  const firstName = form.name.trim().split(" ")[0];
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const submit = useServerFn(submitApplication);
@@ -38,14 +52,20 @@ function ApplyPage() {
 
   function validateStep(i: number, formEl: HTMLFormElement) {
     if (i === 0) {
-      for (const id of ["name", "website"]) {
+      for (const id of ["name", "email", "phone"]) {
         const input = formEl.elements.namedItem(id) as HTMLInputElement | null;
         if (input && !input.reportValidity()) return false;
       }
-      if (!form.fault) { toast.error("Please choose the system fault we're solving."); return false; }
+      if (!form.role) { toast.error("Please tell us what describes you best."); return false; }
+      if (runsAds === null) { toast.error("Please tell us if you run paid ads today."); return false; }
     }
     if (i === 1) {
+      const input = formEl.elements.namedItem("website") as HTMLInputElement | null;
+      if (input && !input.reportValidity()) return false;
       if (!isValidBudget(form.budget)) { toast.error("Please select your monthly marketing budget."); return false; }
+      if (!form.fault) { toast.error("Please choose the system fault we're solving."); return false; }
+    }
+    if (i === 2) {
       const goal = formEl.elements.namedItem("goal") as HTMLTextAreaElement | null;
       if (goal && !goal.reportValidity()) return false;
     }
@@ -58,7 +78,7 @@ function ApplyPage() {
     if (status === "sending") return;
     if (!validateStep(step, e.currentTarget)) return;
     if (step < steps.length - 1) { setStep(step + 1); return; }
-    const parsed = applicationSchema.safeParse({ ...form, company });
+    const parsed = applicationSchema.safeParse({ ...form, runsAds, wantsUpdates, company });
     if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Please check your answers."); return; }
     setStatus("sending");
     try {
@@ -100,10 +120,17 @@ function ApplyPage() {
               </ol>
 
               {status === "sent" ? (
-                <div role="status" className="flex flex-col items-start gap-4 p-6 sm:p-10">
-                  <CircleCheck className="size-10 text-health-robust" aria-hidden="true" />
-                  <h2 className="text-2xl font-bold">Application received.</h2>
-                  <p className="max-w-md text-muted-foreground">Thanks, {form.name.split(" ")[0]}. Your diagnosis for <span className="font-semibold text-maroon">{faultLabel}</span> has been saved for our team.{isCalendlyUrl(calendlyUrl) ? " Book your strategy call alongside to lock in a time." : ""}</p>
+                <div role="status" className="flex flex-col items-start gap-5 p-6 sm:p-10">
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 12 }}><CircleCheck className="size-12 text-health-robust" aria-hidden="true" /></motion.div>
+                  <h2 className="text-3xl font-bold">You're in, {firstName}.</h2>
+                  <p className="max-w-md text-muted-foreground">Your diagnosis for <span className="font-semibold text-maroon">{faultLabel}</span> is with our team. Here's exactly what happens next:</p>
+                  <ol className="w-full space-y-3">
+                    {["We study your website and your numbers.", `We email your growth map to ${form.email}.`, isCalendlyUrl(calendlyUrl) ? "You book your strategy call alongside." : "We reach out to schedule your strategy call."].map((t, i) => (
+                      <motion.li key={t} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.12 }} className="flex items-center gap-3 rounded-xl border border-border bg-card/70 px-4 py-3 text-sm font-medium">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span>{t}
+                      </motion.li>
+                    ))}
+                  </ol>
                 </div>
               ) : (
               <div className="p-6 sm:p-10">
@@ -113,12 +140,53 @@ function ApplyPage() {
                 </div>
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.25 }} className="space-y-6">
+                    <div>
+                      <h2 className="text-2xl font-bold">{step > 0 && firstName ? `${firstName}, ` : ""}{step > 0 && firstName ? stepIntro[step].title.charAt(0).toLowerCase() + stepIntro[step].title.slice(1) : stepIntro[step].title}</h2>
+                      <p className="mt-1 text-sm text-muted-foreground">{stepIntro[step].sub}</p>
+                    </div>
                     {step === 0 && (
                       <>
                         <div className="space-y-2">
-                          <Label htmlFor="name" className="text-sm font-semibold text-maroon">Your full name</Label>
-                          <Input id="name" name="name" required maxLength={200} placeholder="Your full name" value={form.name} onChange={(e) => set("name")(e.target.value)} className={field} />
+                          <Label htmlFor="name" className="text-sm font-semibold text-maroon">Your name</Label>
+                          <Input id="name" name="name" required maxLength={200} autoComplete="name" placeholder="Your full name" value={form.name} onChange={(e) => set("name")(e.target.value)} className={field} />
                         </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email" className="text-sm font-semibold text-maroon">Email address</Label>
+                          <Input id="email" name="email" type="email" required maxLength={255} autoComplete="email" placeholder="you@company.com" value={form.email} onChange={(e) => set("email")(e.target.value)} className={field} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone" className="text-sm font-semibold text-maroon">Phone number</Label>
+                          <div className="flex gap-2">
+                            <Select value={form.countryCode} onValueChange={set("countryCode")}>
+                              <SelectTrigger aria-label="Country code" className={`${field} w-32 shrink-0`}><SelectValue /></SelectTrigger>
+                              <SelectContent className="rounded-xl">
+                                {countryCodes.map((c) => <SelectItem key={c.code} value={c.code}>{c.flag} {c.code} <span className="text-muted-foreground">{c.name}</span></SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                            <Input id="phone" name="phone" type="tel" inputMode="tel" required pattern="[0-9 ]{6,20}" autoComplete="tel-national" placeholder="98765 43210" value={form.phone} onChange={(e) => set("phone")(e.target.value)} className={field} />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <p id="ads-label" className="text-sm font-semibold text-maroon">Do you run <span className="text-primary">paid ads</span> today?</p>
+                          <div role="radiogroup" aria-labelledby="ads-label" className="flex gap-2">
+                            {[{ v: true, l: "Yes" }, { v: false, l: "No" }].map((o) => (
+                              <button key={o.l} type="button" role="radio" aria-checked={runsAds === o.v} onClick={() => setRunsAds(o.v)} className={`h-11 min-w-24 rounded-full border px-6 text-sm font-semibold transition-all hover:-translate-y-0.5 ${runsAds === o.v ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card/70 text-muted-foreground hover:text-maroon"}`}>{o.l}</button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="role" className="text-sm font-semibold text-maroon">What describes you best?</Label>
+                          <Select value={form.role} onValueChange={set("role")}>
+                            <SelectTrigger id="role" className={field}><SelectValue placeholder="What describes you best?" /></SelectTrigger>
+                            <SelectContent className="rounded-xl">
+                              {roleOptions.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
+                    )}
+                    {step === 1 && (
+                      <>
                         <div className="space-y-2">
                           <Label htmlFor="website" className="text-sm font-semibold text-maroon">Company website</Label>
                           <Input id="website" name="website" type="url" required maxLength={200} placeholder="https://" value={form.website} onChange={(e) => set("website")(e.target.value)} className={field} />
@@ -132,10 +200,6 @@ function ApplyPage() {
                             </SelectContent>
                           </Select>
                         </div>
-                      </>
-                    )}
-                    {step === 1 && (
-                      <>
                         <div className="space-y-2">
                           <Label htmlFor="budget" className="text-sm font-semibold text-maroon">Monthly marketing budget</Label>
                           <Select value={form.budget} onValueChange={set("budget")}>
@@ -145,23 +209,29 @@ function ApplyPage() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="goal" className="text-sm font-semibold text-maroon">What should your system achieve?</Label>
-                          <Textarea id="goal" name="goal" required maxLength={1000} rows={5} value={form.goal} onChange={(e) => set("goal")(e.target.value)} placeholder="More qualified leads, higher ROAS, global expansion…" className="rounded-xl bg-card/80 text-base" />
-                        </div>
                       </>
                     )}
                     {step === 2 && (
-                      <div className="space-y-3">
-                        <p id="timeline-label" className="text-sm font-semibold text-maroon">When do you want this deployed?</p>
-                        <ToggleGroup aria-labelledby="timeline-label" type="single" value={form.timeline} onValueChange={(v) => v && set("timeline")(v)} className="grid grid-cols-2 gap-2">
-                          {timelineOptions.map((o) => (
-                            <ToggleGroupItem key={o.value} value={o.value} className="h-14 rounded-xl border border-border bg-card/70 text-sm font-semibold text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-maroon data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
-                              {o.label}
-                            </ToggleGroupItem>
-                          ))}
-                        </ToggleGroup>
-                      </div>
+                      <>
+                        <div className="space-y-2">
+                          <Label htmlFor="goal" className="text-sm font-semibold text-maroon">What should your system achieve?</Label>
+                          <Textarea id="goal" name="goal" required maxLength={1000} rows={4} value={form.goal} onChange={(e) => set("goal")(e.target.value)} placeholder="More qualified leads, higher ROAS, global expansion…" className="rounded-xl bg-card/80 text-base" />
+                        </div>
+                        <div className="space-y-3">
+                          <p id="timeline-label" className="text-sm font-semibold text-maroon">When do you want this deployed?</p>
+                          <ToggleGroup aria-labelledby="timeline-label" type="single" value={form.timeline} onValueChange={(v) => v && set("timeline")(v)} className="grid grid-cols-2 gap-2">
+                            {timelineOptions.map((o) => (
+                              <ToggleGroupItem key={o.value} value={o.value} className="h-14 rounded-xl border border-border bg-card/70 text-sm font-semibold text-muted-foreground transition-all hover:-translate-y-0.5 hover:text-maroon data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground">
+                                {o.label}
+                              </ToggleGroupItem>
+                            ))}
+                          </ToggleGroup>
+                        </div>
+                        <label htmlFor="updates" className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-card/70 p-4">
+                          <Checkbox id="updates" checked={wantsUpdates} onCheckedChange={(v) => setWantsUpdates(v === true)} className="mt-0.5" />
+                          <span className="text-sm"><span className="font-semibold text-maroon">Send me growth breakdowns</span><span className="block text-muted-foreground">Real campaign lessons, once in a while.</span></span>
+                        </label>
+                      </>
                     )}
                   </motion.div>
                 </AnimatePresence>
@@ -171,15 +241,27 @@ function ApplyPage() {
                     <Button type="button" variant="ghost" size="lg" className="rounded-full" onClick={() => setStep(step - 1)}><ArrowLeft /> Back</Button>
                   )}
                   <Button type="submit" variant="shakti" size="xl" className="ml-auto w-full sm:w-auto" disabled={status === "sending"}>
-                    {step < steps.length - 1 ? <>Continue <ArrowRight /></> : status === "sending" ? <><Loader2 className="animate-spin" /> Sending…</> : "Apply For Partnership"}
+                    {step < steps.length - 1 ? <>Continue <ArrowRight /></> : status === "sending" ? <><Loader2 className="animate-spin" /> Sending…</> : "Get My Growth Map"}
                   </Button>
                 </div>
+                <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground sm:justify-end"><Lock className="size-3.5" aria-hidden="true" /> Your data is safe. No spam, ever.</p>
               </div>
               )}
             </form>
           </Float>
 
           <Float delay={0.3} className="flex flex-col gap-6">
+            <aside className="glass rounded-3xl p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">What you'll get</p>
+              <ul className="mt-5 space-y-5">
+                {youGet.map((g) => (
+                  <li key={g.n} className="flex gap-4">
+                    <span className="font-display text-2xl font-extrabold text-gradient">{g.n}</span>
+                    <span><span className="block font-bold text-maroon">{g.t}</span><span className="text-sm text-muted-foreground">{g.d}</span></span>
+                  </li>
+                ))}
+              </ul>
+            </aside>
             <aside className="glass rounded-3xl p-8" aria-live="polite">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Solution matrix</p>
               <h2 className="mt-3 text-2xl font-bold">{faultLabel ? `Fixing: ${faultLabel}` : "Your architecture appears here"}</h2>
@@ -194,7 +276,7 @@ function ApplyPage() {
                     ))}
                   </motion.ul>
                 ) : (
-                  <motion.p key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-4 text-sm text-muted-foreground">Choose the system fault in step 1 and you'll see the services we'd deploy for you.</motion.p>
+                  <motion.p key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-4 text-sm text-muted-foreground">Choose the system fault in step 2 and you'll see the services we'd deploy for you.</motion.p>
                 )}
               </AnimatePresence>
             </aside>

@@ -17,32 +17,50 @@ export type Database = {
       partnership_applications: {
         Row: {
           budget: string
+          country_code: string | null
           created_at: string
+          email: string | null
           fault: string
           goal: string
           id: string
           name: string
+          phone: string | null
+          role: string | null
+          runs_ads: boolean | null
           timeline: string
+          wants_updates: boolean
           website: string
         }
         Insert: {
           budget: string
+          country_code?: string | null
           created_at?: string
+          email?: string | null
           fault: string
           goal: string
           id?: string
           name: string
+          phone?: string | null
+          role?: string | null
+          runs_ads?: boolean | null
           timeline: string
+          wants_updates?: boolean
           website: string
         }
         Update: {
           budget?: string
+          country_code?: string | null
           created_at?: string
+          email?: string | null
           fault?: string
           goal?: string
           id?: string
           name?: string
+          phone?: string | null
+          role?: string | null
+          runs_ads?: boolean | null
           timeline?: string
+          wants_updates?: boolean
           website?: string
         }
         Relationships: []

@@ -34,6 +34,12 @@ export const submitApplication = createServerFn({ method: "POST" })
       budget: data.budget,
       goal: data.goal,
       timeline: data.timeline,
+      email: data.email,
+      country_code: data.countryCode,
+      phone: data.phone,
+      role: data.role,
+      runs_ads: data.runsAds,
+      wants_updates: data.wantsUpdates,
     });
     if (error) {
       console.error("submitApplication insert failed", error.message);
