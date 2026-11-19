@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Funnel, Wallet, Eye, ArrowRight } from "lucide-react";
+import { ArrowRight, Moon, Search, ShoppingCart, PhoneOff, Compass, Wrench, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Float, Eyebrow, Parallax, Stagger, StaggerItem } from "@/components/site/Float";
+import { Float, Parallax, Stagger, StaggerItem } from "@/components/site/Float";
 import { GrowthAnalyzer } from "@/components/growth/GrowthAnalyzer";
 import { PillarStrip } from "@/components/growth/PillarStrip";
 import { agencyHead, trustMetrics } from "@/lib/agency";
 
 export const Route = createFileRoute("/")({
-  head: () => agencyHead("/", "Team Bhadrakali — Predictable Growth & SEO Dominance", "Your brand deserves a reliable, scalable growth architecture. SEO and performance marketing systems that stop leaking leads and scale revenue globally."),
+  head: () => agencyHead("/", "Team Bhadrakali — Growth that doesn't sleep when you do", "Your customers are searching right now. Team Bhadrakali builds the SEO and performance marketing systems that make sure they find you, not your competitor."),
   component: Index,
 });
 
@@ -18,34 +18,40 @@ const metricTips: Record<string, string> = {
   "#1 Google Rankings": "Search terms where our clients hold the top Google position.",
 };
 
-const fixes = [
-  { I: Wallet, t: "You're paying for leaks", d: "We audit every campaign, cut what bleeds money and reinvest your budget in what converts." },
-  { I: Funnel, t: "Your funnel breaks under load", d: "From first click to checkout, we architect paths that keep converting when traffic spikes." },
-  { I: Eye, t: "Your buyers can't find you", d: "We align technical SEO, search intent and authoritative content so high-intent buyers land on you first." },
+// Everyday moments a founder recognises instantly; each maps to a fix.
+const scenes = [
+  { I: Moon, time: "11:47 PM", t: "Someone searches for exactly what you sell.", d: "They click the first result. It isn't you. We make sure next time it is." },
+  { I: ShoppingCart, time: "2:15 PM", t: "A cart fills up. Then the tab closes.", d: "Somewhere between click and checkout, your funnel lets go. We find where, and fix it." },
+  { I: PhoneOff, time: "Month end", t: "The ad bill arrives. The phone stayed quiet.", d: "Spend that doesn't sell gets cut. What's left gets sharper and pays for itself." },
+];
+
+const path = [
+  { I: Search, t: "We look", d: "Your ads, search and site, read like a story. Where it breaks becomes obvious." },
+  { I: Wrench, t: "We rebuild", d: "One system: search that brings buyers, ads that convert, pages that close." },
+  { I: LineChart, t: "You watch it grow", d: "Clear numbers every month. No jargon, no mystery." },
 ];
 
 function Index() {
   return (
     <>
-      <section className="flex items-center justify-center px-6 pb-12 pt-20 sm:pb-16 sm:pt-24">
+      <section className="flex items-center justify-center px-6 pb-14 pt-20 sm:pb-20 sm:pt-28">
         <Parallax offset={80} className="mx-auto max-w-5xl text-center">
-          <Float><Eyebrow>Team Bhadrakali · Growth systems architects</Eyebrow></Float>
-          <Float delay={0.1}>
-            <h1 className="text-4xl font-extrabold leading-[1.12] sm:text-6xl lg:text-7xl">
-              Your Brand Deserves a <span className="text-gradient">Scalable Growth Architecture.</span>
+          <Float>
+            <h1 className="text-4xl font-extrabold leading-[1.08] sm:text-6xl lg:text-7xl">
+              Right now, someone is searching for you. <span className="text-gradient">Will they find you?</span>
             </h1>
           </Float>
-          <Float delay={0.2}>
+          <Float delay={0.15}>
             <p className="mx-auto mt-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-              You need more than ads and keywords. You need a pipeline that is reliable under pressure, scales with your spend and stays easy to grow. We engineer predictable growth and SEO dominance for ambitious brands.
+              Every day, buyers who are ready to pay end up with someone else. We build the search and ad systems that bring them to you, even while you sleep.
             </p>
           </Float>
           <Float delay={0.3} className="mt-10 flex flex-wrap justify-center gap-4">
             <Button asChild variant="shakti" size="xl">
-              <Link to="/apply">Get My Free Growth Audit <ArrowRight /></Link>
+              <Link to="/apply">Show me what I'm missing <ArrowRight /></Link>
             </Button>
             <Button asChild variant="secondary" size="xl" className="rounded-full transition-transform hover:-translate-y-0.5">
-              <a href="#growth-analyzer">Analyze My System</a>
+              <a href="#growth-analyzer">Check my numbers in 30 seconds</a>
             </Button>
           </Float>
         </Parallax>
@@ -67,45 +73,72 @@ function Index() {
         </Stagger>
       </section>
 
-      <section className="px-6 py-20">
+      <section className="px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <Float className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold sm:text-5xl">You don't need more marketing. You need a better system.</h2>
-            <p className="mt-4 text-muted-foreground">We treat your funnel like engineers treat critical software. Every part is built on three principles.</p>
+            <h2 className="text-4xl font-bold sm:text-5xl">You've lived these moments.</h2>
+            <p className="mt-4 text-muted-foreground">Each one is money walking out the door, quietly.</p>
           </Float>
-          <div className="mt-14"><PillarStrip /></div>
+          <Stagger className="mt-14 grid gap-6 md:grid-cols-3">
+            {scenes.map(({ I, time, t, d }) => (
+              <StaggerItem key={t}>
+                <article className="glass group h-full rounded-2xl p-8 transition-transform hover:-translate-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="glow-red inline-flex size-11 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform group-hover:rotate-6"><I className="size-5" /></span>
+                    <span className="font-display text-sm font-bold text-primary">{time}</span>
+                  </div>
+                  <h3 className="mt-6 text-xl font-bold">{t}</h3>
+                  <p className="mt-3 text-muted-foreground">{d}</p>
+                </article>
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
       </section>
 
       <section className="px-6 py-16">
         <div className="mx-auto max-w-6xl">
           <Float className="mx-auto max-w-2xl text-center">
-            <Eyebrow>Free interactive diagnosis</Eyebrow>
-            <h2 className="text-4xl font-bold sm:text-5xl">How healthy is your growth system?</h2>
-            <p className="mt-4 text-muted-foreground">Move the sliders to match your numbers. See where your system leaks and what fixing it could be worth.</p>
+            <h2 className="text-4xl font-bold sm:text-5xl">How much is slipping away?</h2>
+            <p className="mt-4 text-muted-foreground">Slide in your real numbers. The answer usually surprises people.</p>
           </Float>
           <Float delay={0.1} className="mt-12"><GrowthAnalyzer /></Float>
         </div>
       </section>
 
-      <section className="px-6 py-20">
+      <section className="px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <Float className="mx-auto max-w-2xl text-center">
-            <h2 className="text-4xl font-bold sm:text-5xl">Being invisible online is costing you.</h2>
-            <p className="mt-4 text-muted-foreground">Here's how we turn your leaks into leverage.</p>
+            <h2 className="text-4xl font-bold sm:text-5xl">From leaking to leading, in three moves.</h2>
           </Float>
           <Stagger className="mt-14 grid gap-6 md:grid-cols-3">
-            {fixes.map(({ I, t, d }) => (
+            {path.map(({ I, t, d }, i) => (
               <StaggerItem key={t}>
-                <div className="glass group h-full rounded-2xl p-8 transition-transform hover:-translate-y-1">
-                  <div className="glow-red inline-flex size-12 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform group-hover:rotate-6"><I /></div>
+                <div className="h-full rounded-2xl border border-border bg-card/60 p-8">
+                  <div className="flex items-center justify-between">
+                    <I className="size-6 text-primary" />
+                    <span className="font-display text-5xl font-extrabold text-primary/15">0{i + 1}</span>
+                  </div>
                   <h3 className="mt-6 text-xl font-bold">{t}</h3>
                   <p className="mt-3 text-muted-foreground">{d}</p>
                 </div>
               </StaggerItem>
             ))}
           </Stagger>
+          <div className="mt-20"><PillarStrip /></div>
         </div>
+      </section>
+
+      <section className="px-6 pb-24 pt-8">
+        <Float className="glass mx-auto max-w-4xl rounded-3xl p-10 text-center sm:p-16">
+          <Compass className="mx-auto size-8 text-primary" />
+          <h2 className="mt-6 text-3xl font-bold sm:text-5xl">Tomorrow, someone searches again.</h2>
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Make sure the first name they see is yours. It starts with a 60-second application.</p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Button asChild variant="shakti" size="xl"><Link to="/apply">Start my 60 seconds <ArrowRight /></Link></Button>
+            <Button asChild variant="secondary" size="xl" className="rounded-full"><Link to="/outcomes">See who we've helped</Link></Button>
+          </div>
+        </Float>
       </section>
     </>
   );

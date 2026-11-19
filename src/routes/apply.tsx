@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Float, Eyebrow } from "@/components/site/Float";
+import { Float } from "@/components/site/Float";
 import { agencyHead, budgetOptions, calendlyUrl, isCalendlyUrl, isValidBudget } from "@/lib/agency";
 import { submitApplication } from "@/lib/applications.functions";
 import { applicationSchema, countryCodes, roleOptions } from "@/lib/applications";
@@ -96,7 +96,6 @@ function ApplyPage() {
   return (
     <section className="px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
-        <Float><Eyebrow>Solution Architecture</Eyebrow></Float>
         <Float delay={0.1}><h1 className="max-w-4xl text-4xl font-extrabold leading-tight sm:text-6xl">Diagnose & Architect Your <span className="text-gradient">Growth System.</span></h1></Float>
         <Float delay={0.15}><p className="mt-6 max-w-2xl text-lg text-muted-foreground">Tell us what's breaking. You'll see the architecture we'd deploy for your brand as you answer.</p></Float>
 

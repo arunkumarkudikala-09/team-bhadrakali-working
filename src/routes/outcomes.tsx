@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Float, Eyebrow } from "@/components/site/Float";
+import { Float } from "@/components/site/Float";
 import { agencyHead, campaigns } from "@/lib/agency";
 
 export const Route = createFileRoute("/outcomes")({
@@ -13,9 +13,8 @@ function OutcomesPage() {
     <section className="px-6 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <Float className="mx-auto max-w-4xl text-center">
-          <Eyebrow>Commercial outcomes · Data room</Eyebrow>
-          <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Audited Client <span className="text-gradient">Campaigns & ROI.</span></h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">Your growth should be measured in revenue, not vanity metrics. Here is what reliable, scalable systems delivered for brands like yours.</p>
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">Real brands. <span className="text-gradient">Real before and after.</span></h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">Likes don't pay rent. Revenue does. Here's what changed for brands that were exactly where you are today.</p>
         </Float>
         <div className="mt-16 space-y-8">
           {campaigns.map((campaign, index) => (

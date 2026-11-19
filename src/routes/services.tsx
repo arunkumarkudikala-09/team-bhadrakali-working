@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Target, PenTool, Flame, ArrowUpRight } from "lucide-react";
-import { Float, Eyebrow, Stagger, StaggerItem } from "@/components/site/Float";
+import { Float, Stagger, StaggerItem } from "@/components/site/Float";
 import { GrowthAnalyzer } from "@/components/growth/GrowthAnalyzer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { agencyHead } from "@/lib/agency";
@@ -26,9 +26,8 @@ function ServicesPage() {
       <section className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <Float><Eyebrow>Services</Eyebrow></Float>
-            <Float delay={0.1}><h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight sm:text-6xl">Full-Funnel <span className="text-gradient">Digital Infrastructure.</span></h1></Float>
-            <Float delay={0.2}><p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">You need this, and here is how we architect it. Every service is engineered as one part of your growth system.</p></Float>
+            <Float delay={0.1}><h1 className="mx-auto max-w-4xl text-4xl font-extrabold leading-tight sm:text-6xl">Pick the part that keeps <span className="text-gradient">you up at night.</span></h1></Float>
+            <Float delay={0.2}><p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">Each service fixes one real problem. Together, they become one system that brings buyers in and keeps them coming.</p></Float>
           </div>
           <Stagger className="mt-16 grid auto-rows-[minmax(260px,auto)] gap-6 md:grid-cols-3">
             {services.map(({ id, fault, t, need, d, I, pillar, span, g }) => (

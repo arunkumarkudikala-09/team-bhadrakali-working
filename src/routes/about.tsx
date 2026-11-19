@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Layers, Zap, Send, ArrowRight } from "lucide-react";
-import { Float, Eyebrow, Stagger, StaggerItem } from "@/components/site/Float";
+import { Float, Stagger, StaggerItem } from "@/components/site/Float";
 import { Button } from "@/components/ui/button";
 import { agencyHead } from "@/lib/agency";
 
@@ -21,9 +21,8 @@ function AboutPage() {
     <section className="px-6 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <Float className="mx-auto max-w-4xl text-center">
-          <Eyebrow>About us & how we work</Eyebrow>
-          <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">A Systems-Driven <span className="text-gradient">Growth Engine.</span></h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">You need a partner who treats your growth like critical infrastructure. Here is the connected process that takes your brand from diagnosis to delivery.</p>
+          <h1 className="text-4xl font-extrabold leading-tight sm:text-6xl">We start where it hurts. <span className="text-gradient">Then we build.</span></h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">No guesswork, no long decks. Four steps, from the first honest look at your numbers to a system that keeps working after we hand it over.</p>
         </Float>
         <Stagger className="relative mt-16 grid gap-6 lg:grid-cols-4">
           <div className="bg-pipeline absolute inset-x-8 top-12 hidden h-px lg:block" aria-hidden="true" />
