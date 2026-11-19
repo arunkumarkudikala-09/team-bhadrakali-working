@@ -22,6 +22,13 @@
       "when": 1794967389502,
       "tag": "0002_noop_check",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795054411786,
+      "tag": "0003_tighten_application_insert_policy",
+      "breakpoints": true
     }
   ]
 }
