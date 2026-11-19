@@ -14,6 +14,7 @@
 - [x] Apply → "Solution Architecture" 3-step diagnostic terminal with live solution matrix + strategy call placeholder.
 - [x] Verify desktop + mobile in the browser.
 # Finalization brief (Nov 12)
+- [x] Dark-mode toasts follow the site theme.
 
 - [x] Save Solution Architecture applications to Lovable Cloud.
 - [ ] Email the agency on each application — blocked: needs a verified sender domain and the agency inbox address.
